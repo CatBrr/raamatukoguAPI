@@ -2,53 +2,43 @@
     "books":[
         {
             "id":1,
-            "title":"Learning JavaScript Design Patterns",
-            "author": "Marijn Haverbeke",
-            "price":10.22
+            "title":"Eloquent JavaScript, Third Edition",
+            "author":"Marijn Haverbeke"
         },
         {
             "id":2,
             "title":"Practical Modern JavaScript",
-            "author": "Nicolás Bevacqua",
-            "price":5.60
+            "author":"Nicol?s Bevacqua"
         },
         {
             "id":3,
-            "title":"The Definitive Guide for JavaScript Developers",
-            "author": "Nicholas C. Zakas",
-            "price":1.00
+            "title":"Understanding ECMAScript 6",
+            "author":"Nicholas C. Zakas"
         },
         {
             "id":4,
             "title":"Speaking JavaScript",
-            "author": "Axel Rauschmayer",
-            "price":11.00
+            "author":"Axel Rauschmayer"
         },
         {
             "id":5,
-            "title":"You Don't Know JS Yet",
-            "author": "Kyle Simpson",
-            "price":15.99
+            "title":"Learning JavaScript Design Patterns",
+            "author":"Addy Osmani"
         },
         {
             "id":6,
-            "title":"Pro Git",
-            "author": "Scott Chacon and Ben Straub",
-            "price":17.00
+            "title":"You Don't Know JS Yet",
+            "author":"Kyle Simpson"
         },
         {
             "id":7,
-            "title":"Rethinking Productivity in Software Engineering",
-            "author": "Caitlin Sadowski, Thomas Zimmermann",
-            "price":5.50
+            "title":"Pro Git",
+            "author":"Scott Chacon and Ben Straub"
         },
         {
             "id":8,
-            "title":"Eloquent JavaScript, Third Edition",
-            "author": "Marijn Haverbeke",
-            "price":8.99
+            "title":"Rethinking Productivity in Software Engineering",
+            "author":"Caitlin Sadowski, Thomas Zimmermann"
         }
-        
     ]
-
 }
