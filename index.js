@@ -7,13 +7,17 @@ app.use(express.json());
 app.get('/books', (req,res)=>{ //kutsud app objektist välja get() meetodi, andes esimeseks argumendiks "/games" ja teiseks argumendiks funktsiooni, mis käivitatakse, kui keegi teeb GET /games päringu meie API vastu. See funktsioon koostab vastuse sellele päringule. Selles funktsioonis on sul ligipääs kahele objektile: req(uest) ja res(ponse). Muutuja reqi seest saad lugeda andmeid, mis klient päringuga saatis. Selle lõpp-punkti jaoks meil sissetulevaid andmeid vaja pole. Muutuja res võimaldab panna vastusesse andmeid, mida me tahame kliendile tagasi saata.
   res.send(books); //asendame seal varem olnud kahe mänguga püsiprogrammeeritud massiivi games muutujaga, mille defineerisime real 6.
 });
-app.get('/books/:id', (req,res)=>{ //lisame /games/:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot päriti (nt kui päring on GET /games/8, siis :id väärtus on 8).
+app.get('/', (req,res)=>{ //kutsud app objektist välja get() meetodi, andes esimeseks argumendiks "/games" ja teiseks argumendiks funktsiooni, mis käivitatakse, kui keegi teeb GET /games päringu meie API vastu. See funktsioon koostab vastuse sellele päringule. Selles funktsioonis on sul ligipääs kahele objektile: req(uest) ja res(ponse). Muutuja reqi seest saad lugeda andmeid, mis klient päringuga saatis. Selle lõpp-punkti jaoks meil sissetulevaid andmeid vaja pole. Muutuja res võimaldab panna vastusesse andmeid, mida me tahame kliendile tagasi saata.
+  res.send(books); //asendame seal varem olnud kahe mänguga püsiprogrammeeritud massiivi games muutujaga, mille defineerisime real 6.
+});
+app.get('/:id', (req,res)=>{ //lisame /games/:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot päriti (nt kui päring on GET /games/8, siis :id väärtus on 8).
     if(typeof books[req.params.id-1]==='undefined'){
         return res.status(404).send({error:"book not foud"}); //kui ei ole leinud näitab viga
     }
     res.send(books[req.params.id-1]); //saadame päringu vastusena tagasi games massiivist selle liikme, mille indeks on :id väärtus.
 });
-app.post('/books/',(req,res)=>{ //lisatakse mängude massiivi uus objekt
+
+app.post('/',(req,res)=>{ //lisatakse mängude massiivi uus objekt
     if(!req.body.title || !req.body.price || !req.body.author){
         return res.status(400).send({ error: 'One or all params are missing'});
     }
@@ -23,7 +27,7 @@ app.post('/books/',(req,res)=>{ //lisatakse mängude massiivi uus objekt
         author: req.body.author,
         price: req.body.price//üritati lugeda .price attribuuti selliselt objektilt, mis pole defineeritud. index.js real 35 on price: req.body.price. Sellest saame tuletada, et see objekt, mis pole defineeritud, on req.body. 
     };
-    books.push(book)
+    books.push(book);
     res.status(201)
         .location(`${getBaseUrl(req)}/games/${books.length}`)
         .send(book);
