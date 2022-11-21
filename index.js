@@ -17,21 +17,7 @@ app.get('/:id', (req,res)=>{ //lisame /games/:id lõpp-punkti. See :id on mingi 
     res.send(books[req.params.id-1]); //saadame päringu vastusena tagasi games massiivist selle liikme, mille indeks on :id väärtus.
 });
 
-app.post('/',(req,res)=>{ //lisatakse mängude massiivi uus objekt
-    if(!req.body.title || !req.body.price || !req.body.author){
-        return res.status(400).send({ error: 'One or all params are missing'});
-    }
-    let book ={
-        id: books.length+1, //id väärtuseks on massiivi liikmete hetkearv + 1, 
-        title: req.body.title,
-        author: req.body.author,
-        price: req.body.price//üritati lugeda .price attribuuti selliselt objektilt, mis pole defineeritud. index.js real 35 on price: req.body.price. Sellest saame tuletada, et see objekt, mis pole defineeritud, on req.body. 
-    };
-    books.push(book);
-    res.status(201)
-        .location(`${getBaseUrl(req)}/games/${books.length}`)
-        .send(book);
-});
+
 //kutsume app muutujast välja meetodi listen() ja anname selle meetodi esimeseks argumendiks port muutujas oleva numbri, pannes sellega rakenduse kuulama võrgus seda porti sissetulevate päringute osas. 
 app.listen(port,()=> {
     console.log(`API up at: http://localhost:${port}`); //Teine, valikuline argument listen meetodil määratleb funktsiooni, mis läheb siis käima, kui rakendus on hakanud võrgus porti kuulama. Selles funktsioonis prindime me konsoolile aadressi, millel rakendus kättesaadav on. Nii on mugav aadressi brauserisse kopeerida ja osades terminalides (nagu nt VS Code) on aadress ka klõpsatav.
