@@ -2,13 +2,15 @@
   "name": "raamatukoguAPI",
   "version": "1.0.0",
   "description": "ul api raamatukogu",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DariaEvtina/raamatukoguAPI.git"
+
   },
   "keywords": [],
   "author": "",
