@@ -61,6 +61,9 @@ app.get("/", (req, res) => {
     });
     //res.status(200).send("Raamatukogu: raamatud");
   });
+  app.get("/add_new", (req, res) => {
+    res.render('adding');
+    });
   app.use(express.static(__dirname + '/public'));
 
 app.set('view engine', 'pug');

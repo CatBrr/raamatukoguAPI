@@ -36,6 +36,7 @@ h1{
     background-color: white;
 }
 
+
 .fl-table td, .fl-table th {
     text-align: center;
     padding: 8px;
@@ -131,10 +132,7 @@ h1{
     width: 115px;
     height: 25px;
     background: rgb(79, 91, 145);
-    padding: 10px;
     text-align: center;
     border-radius: 5px;
     color: white;
-    font-weight: bold;
-    line-height: 25px;
 }

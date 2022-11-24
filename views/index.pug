@@ -11,7 +11,7 @@ html
           h1 Raamatukogu
       block content
       div.table-wrapper
-      //a.btn(href='http://localhost:8080/')
+      a.btn(href='/add_new') Lisa uus
       table.fl-table
         th Title
         th Author
@@ -22,4 +22,4 @@ html
                 td= ram.author
                 td= ram.price +' €'
                 td 
-                    //a.btn(href=`http://localhost:8080/books/${ram.id}`)
+                    //a.btn(href=`/books/${ram.id}`)
