@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    title Raamatukogu avaleht
+    link(rel='stylesheet', href='/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  body
+    main
+      block header
+        header.header
+          h1 Raamatukogu
+      block content
+      div.table-wrapper
+      //a.btn(href='http://localhost:8080/')
+      table.fl-table
+        th Title
+        th Author
+        th Price
+        each ram in ramList
+            tr
+                td= ram.title
+                td= ram.author
+                td= ram.price +' €'
+                td 
+                    //a.btn(href=`http://localhost:8080/books/${ram.id}`)
