@@ -2,24 +2,51 @@ doctype html
 html
   head
     title Raamatukogu avaleht
-    link(rel='stylesheet', href='css/style.css')
+    link(rel="stylesheet", href="css/style.css")
     meta(name="viewport" content="width=device-width, initial-scale=1")
   body
     main
       block header
         header.header
           h1 Raamatukogu
+      
       block content
+      div#postform
+        h2 Lissa uue raamat
+        form(action="/books/", method="POST" )
+          label(for="title", class="has-dynamic-label") | Title:
+          input#title(type="text", name="title",required )
+          label(for="author", class="has-dynamic-label") | Author:
+          input#author(type="text", name="author",required)
+          label(for="price", class="has-dynamic-label") | Price:
+          input#price(type="number",step=0.010 name="price",required)
+          br
+          br
+          button(type="submit") lisa uus
       div.table-wrapper
-      a.btn(href='/add_new') Lisa uus
       table.fl-table
-        th Title
-        th Author
-        th Price
+        th Nimetus
+        th Autor
+        th Hind
         each ram in ramList
             tr
                 td= ram.title
                 td= ram.author
                 td= ram.price +' €'
                 td 
-                    //a.btn(href=`/books/${ram.id}`)
+                  a.btn( href="/books/"+ram.id+'/delete') kustuta
+                td 
+                  button.btn(onclick="show_hide("+ram.id+")", id="bnt"+ram.id) muuda andmet
+                  form(action="/books/"+ram.id+"/edit", method="POST", style="display: none;", id="editform"+ram.id )
+                    label(for="title", class="has-dynamic-label") Title:
+                    input#title(type="text", name="title",value=ram.title )
+                    br
+                    label(for="author", class="has-dynamic-label") Author:
+                    input#author(type="text", name="author",value=ram.author)
+                    br
+                    label(for="price", class="has-dynamic-label") Price:
+                    input#price(type="number",step=0.010 name="price",value=ram.price)
+                    br
+                    button.btn(type="submit") muuda
+        script(src="js/funk.js")
+                  

@@ -63,7 +63,61 @@ h1{
 }
 
 /* Responsive */
+div#postform{
+    content: "Scroll horizontally >";
+        display: block;
+        text-align: left;
+        font-size: 11px;
+        color: white;
+        padding: 0 0 10px;
+}
+has-dynamic-label {
+    position: relative;
+    padding-top: 1.5rem;
+}
 
+.has-dynamic-label label {
+    position: absolute;
+    top: 0;
+    font-size: var(--font-size-small);
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.2s ease-out;
+}
+input:required + .help-text::before {
+    content: '*Required';
+}
+
+input:optional + .help-text::before {
+    content: '*Optional';
+}
+
+input:read-only {
+    border-color: var(--gray-lighter) !important;
+    color: var(--gray);
+    cursor: not-allowed;
+}
+
+
+input:invalid:focus {
+    border-color: var(--color-error);
+}
+
+input:invalid + .help-text {
+    color: var(--color-error);
+}
+
+input[type='email']:invalid + .help-text::before {
+    content: 'You must enter a valid email.'
+}
+
+input:out-of-range + .help-text::before {
+    content: 'Out of range';
+}
+
+input[type='checkbox'] + label {
+    user-select: none;
+}
 @media (max-width: 767px) {
     .fl-table {
         display: block;
@@ -126,6 +180,14 @@ h1{
         display: block;
         text-align: center;
     }
+}
+button{
+    width: 115px;
+    height: 25px;
+    background: rgb(79, 91, 145);
+    text-align: center;
+    border-radius: 5px;
+    color: white;
 }
 .btn {
     display: block;

@@ -4,9 +4,20 @@ const port = 8080 //Muutuja port väärtuseks paneme selle pordi numbri, millel 
 const books =require('./data/books.json');
 const fs = require('fs');
 app.use(express.json());
+app.use(express.urlencoded());
+
 app.get('/books/', (req,res)=>{ //kutsud app objektist välja get() meetodi, andes esimeseks argumendiks "/games" ja teiseks argumendiks funktsiooni, mis käivitatakse, kui keegi teeb GET /games päringu meie API vastu. See funktsioon koostab vastuse sellele päringule. Selles funktsioonis on sul ligipääs kahele objektile: req(uest) ja res(ponse). Muutuja reqi seest saad lugeda andmeid, mis klient päringuga saatis. Selle lõpp-punkti jaoks meil sissetulevaid andmeid vaja pole. Muutuja res võimaldab panna vastusesse andmeid, mida me tahame kliendile tagasi saata.
   res.send(books); //asendame seal varem olnud kahe mänguga püsiprogrammeeritud massiivi games muutujaga, mille defineerisime real 6.
 });
+app.get("/", (req, res) => {
+    res.render('index',{
+        ramList:books
+    });
+    //res.status(200).send("Raamatukogu: raamatud");
+  });
+  app.use(express.static(__dirname + '/public'));
+
+app.set('view engine', 'pug');
 app.get('/books/:id', (req,res)=>{ //lisame /games/:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot päriti (nt kui päring on GET /games/8, siis :id väärtus on 8).
     if(typeof books[req.params.id-1]==='undefined'){
         return res.status(404).send({error:"book not foud"}); //kui ei ole leinud näitab viga
@@ -29,15 +40,18 @@ app.post('/books/',(req,res)=>{ //lisatakse mängude massiivi uus objekt
         .location(`${getBaseUrl(req)}/games/${books.length}`)
         .send(book);
 });
-app.delete('/books/:id',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot kustutakse (nt kui päring on GET /games/8, siis kustutatakse mäng, mille id väärtus on 8).
+
+app.get('/books/:id/delete',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot kustutakse (nt kui päring on GET /games/8, siis kustutatakse mäng, mille id väärtus on 8).
     if(typeof books[req.params.id -1]==='undefined'){//kontrollitakse games massiivi sisu, vastavalt antud indeksile. Kui indeks ei ole massiivis, tagastatakse undefined
        return res.status(404).send({error:" Book not found"});
     }
     books.splice(req.params.id-1,1);//kasutame funktsiooni splice, millega eemaldame elemendi massiivist. Esimeseks funktsiooni parameetriks anname alguse ehk 0 koha massiivist, kust hakatakse elemente eemaldama. Teiseks parameetriks anname arvu, mitu elementi eemaldatakse.
     fs.writeFileSync('./data/books.json',JSON.stringify(books));
-    res.status(204).send({error:"Book are deleted"});// anname õige tagastatava staatuskoodi: 204 No Content
+    return res
+        .status(201)
+        .send({error:"Book are deleted"});// anname õige tagastatava staatuskoodi: 204 No Content
 });
-app.put('/books/:id',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot kustutakse (nt kui päring on GET /games/8, siis kustutatakse mäng, mille id väärtus on 8).
+app.post('/books/:id/edit',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot kustutakse (nt kui päring on GET /games/8, siis kustutatakse mäng, mille id väärtus on 8).
     if(typeof books[req.params.id -1]==='undefined'){//kontrollitakse games massiivi sisu, vastavalt antud indeksile. Kui indeks ei ole massiivis, tagastatakse undefined
        return res.status(404).send({error:" Book not found"});
     }
@@ -54,19 +68,9 @@ app.put('/books/:id',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on 
     return res
         .status(201)
         .send({error:"Book are updated"});
-    });
-app.get("/", (req, res) => {
-    res.render('index',{
-        ramList:books
-    });
-    //res.status(200).send("Raamatukogu: raamatud");
-  });
-  app.get("/add_new", (req, res) => {
-    res.render('adding');
-    });
-  app.use(express.static(__dirname + '/public'));
 
-app.set('view engine', 'pug');
+    });
+
 //kutsume app muutujast välja meetodi listen() ja anname selle meetodi esimeseks argumendiks port muutujas oleva numbri, pannes sellega rakenduse kuulama võrgus seda porti sissetulevate päringute osas. 
 app.listen(port,()=> {
     console.log(`API up at: http://localhost:${port}`); //Teine, valikuline argument listen meetodil määratleb funktsiooni, mis läheb siis käima, kui rakendus on hakanud võrgus porti kuulama. Selles funktsioonis prindime me konsoolile aadressi, millel rakendus kättesaadav on. Nii on mugav aadressi brauserisse kopeerida ja osades terminalides (nagu nt VS Code) on aadress ka klõpsatav.
