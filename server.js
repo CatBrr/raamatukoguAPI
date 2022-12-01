@@ -36,9 +36,8 @@ app.post('/books/',(req,res)=>{ //lisatakse mängude massiivi uus objekt
     };
     books.push(book);
     fs.writeFileSync('./data/books.json',JSON.stringify(books));
-    res.status(201)
-        .location(`${getBaseUrl(req)}/games/${books.length}`)
-        .send(book);
+    res.status(201)//.location(`${getBaseUrl(req)}/books/${books.length}`).send(book);
+       .redirect('/');
 });
 
 app.get('/books/:id/delete',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot kustutakse (nt kui päring on GET /games/8, siis kustutatakse mäng, mille id väärtus on 8).
@@ -48,8 +47,8 @@ app.get('/books/:id/delete',(req,res)=>{// lisame /games /:id lõpp-punkti. See 
     books.splice(req.params.id-1,1);//kasutame funktsiooni splice, millega eemaldame elemendi massiivist. Esimeseks funktsiooni parameetriks anname alguse ehk 0 koha massiivist, kust hakatakse elemente eemaldama. Teiseks parameetriks anname arvu, mitu elementi eemaldatakse.
     fs.writeFileSync('./data/books.json',JSON.stringify(books));
     return res
-        .status(201)
-        .send({error:"Book are deleted"});// anname õige tagastatava staatuskoodi: 204 No Content
+        .status(204)//.send({error:"Book are deleted"})// anname õige tagastatava staatuskoodi: 204 No Content
+        .redirect('/');
 });
 app.post('/books/:id/edit',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot kustutakse (nt kui päring on GET /games/8, siis kustutatakse mäng, mille id väärtus on 8).
     if(typeof books[req.params.id -1]==='undefined'){//kontrollitakse games massiivi sisu, vastavalt antud indeksile. Kui indeks ei ole massiivis, tagastatakse undefined
@@ -67,7 +66,9 @@ app.post('/books/:id/edit',(req,res)=>{// lisame /games /:id lõpp-punkti. See :
     fs.writeFileSync('./data/books.json',JSON.stringify(books));
     return res
         .status(201)
-        .send({error:"Book are updated"});
+        .redirect('/');
+        //.send({error:"Book are updated"})
+        
 
     });
 
