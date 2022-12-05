@@ -9,7 +9,15 @@ html
       block header
         header.header
           h1 Raamatukogu
-      
+        if IsLogin
+          block content
+            div(class="form-signin")
+              p head päeva #{username}!
+              a.btn(href="/logout") Logi valja
+        else  
+          block content
+            div(class="form-signin") 
+              a.btn(href="/login") Logi sisse
       block content
       div#postform
         h2 Lissa uue raamat
@@ -34,19 +42,21 @@ html
                 td= ram.author
                 td= ram.price +' €'
                 td 
-                  a.btn( href="/books/"+ram.id+'/delete') kustuta
+                  if IsLogin
+                    a.btn( href="/books/"+ram.id+'/delete') kustuta
                 td 
-                  button.btn(onclick="show_hide("+ram.id+")", id="bnt"+ram.id) muuda andmet
-                  form(action="/books/"+ram.id+"/edit", method="POST", style="display: none;", id="editform"+ram.id )
-                    label(for="title", class="has-dynamic-label") Title:
-                    input#title(type="text", name="title",value=ram.title,required )
-                    br
-                    label(for="author", class="has-dynamic-label") Author:
-                    input#author(type="text", name="author",value=ram.author,required)
-                    br
-                    label(for="price", class="has-dynamic-label") Price:
-                    input#price(type="number",step=0.010 name="price",value=ram.price,required)
-                    br
-                    button.btn(type="submit") muuda
+                  if IsLogin
+                    button.btn(onclick="show_hide("+ram.id+")", id="bnt"+ram.id) muuda andmet
+                    form(action="/books/"+ram.id+"/edit", method="POST", style="display: none;", id="editform"+ram.id )
+                      label(for="title", class="has-dynamic-label") Title:
+                      input#title(type="text", name="title",value=ram.title,required )
+                      br
+                      label(for="author", class="has-dynamic-label") Author:
+                      input#author(type="text", name="author",value=ram.author,required)
+                      br
+                      label(for="price", class="has-dynamic-label") Price:
+                      input#price(type="number",step=0.010 name="price",value=ram.price,required)
+                      br
+                      button.btn(type="submit") muuda
         script(src="js/funk.js")
                   

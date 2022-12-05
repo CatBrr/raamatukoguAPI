@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    title Raamatukogu login
+    link(rel="stylesheet", href="css/style.css")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  body
+    main
+        form(class="form-signin" method="POST" action="/login")
+            #error
+            if error
+                p.text-danger Viga!!!
+            h1 Palun Logi sisse
+            table
+                tr
+                    td
+                        //-input email
+                        label( for="inputEmail" class="sr-only") E.post :
+                    td
+                        input(type="email" name="username" id="email" class="form-control" placeholder="Email address" required autofocus)
+                tr
+                    td
+                        //-input password
+                        label(for="inputPassword" class="sr-only") Salasõna :
+                    td
+                        input(type="password" name="password" id="password" class="form-control" placeholder="Password" required)
+                tr
+                    td
+                        //-signIn button
+                        button(type="submit", name = "submit") Logi sisse
+                    td
+                        a.btn(href='/registr') või uus konto

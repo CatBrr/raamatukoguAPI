@@ -1,17 +1,25 @@
 const express = require('express'); //impordib node_modules/ kaustas oleva express/ kausta, kus asub Express raamistik. Tühi sulupaar rea lõpus käivitab mooduli sees oleva koodi, mis tagastab objekti, mille salvestame app nimelisse muutujasse.
 const app= express();
+var bodyParser = require('body-parser');
 const port = 8080 //Muutuja port väärtuseks paneme selle pordi numbri, millel soovime rakendust kuulama panna. Kasutame pordi määramiseks muutujat, et vajadusel saaks porti muuta ainult ühe muutuja väärtuse muutmisega.
 const books =require('./data/books.json');
+const users =require('./data/users.json');
 const fs = require('fs');
 app.use(express.json());
-app.use(express.urlencoded());
+//app.use(express.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/books/', (req,res)=>{ //kutsud app objektist välja get() meetodi, andes esimeseks argumendiks "/games" ja teiseks argumendiks funktsiooni, mis käivitatakse, kui keegi teeb GET /games päringu meie API vastu. See funktsioon koostab vastuse sellele päringule. Selles funktsioonis on sul ligipääs kahele objektile: req(uest) ja res(ponse). Muutuja reqi seest saad lugeda andmeid, mis klient päringuga saatis. Selle lõpp-punkti jaoks meil sissetulevaid andmeid vaja pole. Muutuja res võimaldab panna vastusesse andmeid, mida me tahame kliendile tagasi saata.
   res.send(books); //asendame seal varem olnud kahe mänguga püsiprogrammeeritud massiivi games muutujaga, mille defineerisime real 6.
 });
+app.get("/login", (req, res) => {
+    res.render('login');
+    //res.status(200).send("Raamatukogu: raamatud");
+  });
 app.get("/", (req, res) => {
     res.render('index',{
-        ramList:books
+        ramList:books, 
+        IsLogin: false
     });
     //res.status(200).send("Raamatukogu: raamatud");
   });
@@ -39,7 +47,40 @@ app.post('/books/',(req,res)=>{ //lisatakse mängude massiivi uus objekt
     res.status(201)//.location(`${getBaseUrl(req)}/books/${books.length}`).send(book);
        .redirect('/');
 });
-
+app.post('/login',function(req, res){
+    const username = req.body.username;
+    let loginResult = login(username, req.body.password);
+    if (loginResult) {
+        res.render('index', {ramList:books, username: username, IsLogin: true});
+    }
+    else {
+        res.render('index', {ramList:books, error: true});
+    }
+});
+app.post('/registr',function(req, res) {
+    let user={
+        id: users.length+1,
+        username: req.body.username,
+        password: req.body.password,
+        IsAdmin: false
+    };
+    users.push(user);
+    fs.writeFileSync('./data/users.json',JSON.stringify(users));
+    res.status(201)//.location(`${getBaseUrl(req)}/books/${books.length}`).send(book);
+       .redirect('/');
+    if(error) {
+        res.render('index', {ramList:books, error: true});
+    }
+});
+app.get('/logout',(req,res)=>{
+    res.render('index',{
+        ramList:books, 
+        IsLogin: false
+    });
+});
+app.get('/registr',(req,res)=>{
+    res.render('registr');
+});
 app.get('/books/:id/delete',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot kustutakse (nt kui päring on GET /games/8, siis kustutatakse mäng, mille id väärtus on 8).
     if(typeof books[req.params.id -1]==='undefined'){//kontrollitakse games massiivi sisu, vastavalt antud indeksile. Kui indeks ei ole massiivis, tagastatakse undefined
        return res.status(404).send({error:" Book not found"});
@@ -79,3 +120,12 @@ app.listen(port,()=> {
 function getBaseUrl(req){
     return req.connection && req.connection.encryptesd ? 'https' : 'http' + `://${req.headers.host}`;
 };
+function login(user,password){
+    if(user==="admin@admin.com" && password==="admin"){
+            return true;
+        }
+        else{
+            return false;
+        }
+    
+}
