@@ -5,6 +5,8 @@ const port = 8080 //Muutuja port väärtuseks paneme selle pordi numbri, millel 
 const books =require('./data/books.json');
 const users =require('./data/users.json');
 const fs = require('fs');
+let CurrentUser=false;
+let CurrentUsername="";
 app.use(express.json());
 //app.use(express.urlencoded());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,6 +23,16 @@ app.get("/", (req, res) => {
         ramList:books, 
         IsLogin: false
     });
+    //res.status(200).send("Raamatukogu: raamatud");
+  });
+  app.get("/admin", (req, res) => {
+      if(!CurrentUser){
+        res.redirect('/');
+      }
+      else{
+        res.render('index', {ramList:books, username: CurrentUsername, IsLogin: true});
+      }
+    
     //res.status(200).send("Raamatukogu: raamatud");
   });
   app.use(express.static(__dirname + '/public'));
@@ -44,13 +56,22 @@ app.post('/books/',(req,res)=>{ //lisatakse mängude massiivi uus objekt
     };
     books.push(book);
     fs.writeFileSync('./data/books.json',JSON.stringify(books));
-    res.status(201)//.location(`${getBaseUrl(req)}/books/${books.length}`).send(book);
+    if(CurrentUser){
+        res.status(201)//.location(`${getBaseUrl(req)}/books/${books.length}`).send(book);
+       .redirect('/admin');
+    }
+    else{
+        res.status(201)//.location(`${getBaseUrl(req)}/books/${books.length}`).send(book);
        .redirect('/');
+    }
+    
 });
 app.post('/login',function(req, res){
     const username = req.body.username;
     let loginResult = login(username, req.body.password);
     if (loginResult) {
+        CurrentUser=true;
+        CurrentUsername=username;
         res.render('index', {ramList:books, username: username, IsLogin: true});
     }
     else {
@@ -73,6 +94,8 @@ app.post('/registr',function(req, res) {
     }
 });
 app.get('/logout',(req,res)=>{
+    CurrentUsername="";
+    CurrentUser=false;
     res.render('index',{
         ramList:books, 
         IsLogin: false
@@ -89,7 +112,7 @@ app.get('/books/:id/delete',(req,res)=>{// lisame /games /:id lõpp-punkti. See 
     fs.writeFileSync('./data/books.json',JSON.stringify(books));
     return res
         .status(204)//.send({error:"Book are deleted"})// anname õige tagastatava staatuskoodi: 204 No Content
-        .redirect('/');
+        .redirect('/admin');
 });
 app.post('/books/:id/edit',(req,res)=>{// lisame /games /:id lõpp-punkti. See :id on mingi number, mis näitab, millise mängu infot kustutakse (nt kui päring on GET /games/8, siis kustutatakse mäng, mille id väärtus on 8).
     if(typeof books[req.params.id -1]==='undefined'){//kontrollitakse games massiivi sisu, vastavalt antud indeksile. Kui indeks ei ole massiivis, tagastatakse undefined
@@ -107,7 +130,7 @@ app.post('/books/:id/edit',(req,res)=>{// lisame /games /:id lõpp-punkti. See :
     fs.writeFileSync('./data/books.json',JSON.stringify(books));
     return res
         .status(201)
-        .redirect('/');
+        .redirect('/admin');
         //.send({error:"Book are updated"})
         
 
